@@ -31,7 +31,7 @@ public class Board {
                 return this.board[0][i]; // ชนะในคอลัมน์
             }
         }
-        // ตรวจสอบแนวทแยง
+        // ตรวจสอบแนวทแย
         if (this.board[0][0] != 0 && this.board[0][0] == this.board[1][1] && this.board[1][1] == this.board[2][2]) {
             return this.board[0][0];
         }else if (this.board[0][2] != 0 && this.board[0][2] == this.board[1][1] && this.board[1][1] == this.board[2][0]) {
