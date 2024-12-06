@@ -74,15 +74,8 @@ public class GameViewModel extends AndroidViewModel {
     private void checkGameResult() {
         int[][] board = boardLiveData.getValue();
         if (board == null) return;
-
-        // เพิ่ม Logic ตรวจสอบผล (ผู้เล่นชนะ, AI ชนะ หรือเสมอ)
-        if (isWinner(board, 1)) {
-            gameResult.setValue("Player Wins!");
-        } else if (isWinner(board, 2)) {
-            gameResult.setValue("AI Wins!");
-        } else if (isBoardFull(board)) {
-            gameResult.setValue("Draw!");
-        }
+        String winner = GameUtils.getWinner(board);
+        gameResult.setValue(winner);
     }
 
     private boolean isWinner(int[][] board, int player) {
