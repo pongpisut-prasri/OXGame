@@ -10,20 +10,24 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.example.oxgame.model.Board;
 import com.example.oxgame.utils.AIHelper;
+import com.example.oxgame.utils.GameUtils;
 
 public class GameViewModel extends AndroidViewModel {
     private final Board board;
     private final MutableLiveData<int[][]> boardLiveData;
     private final MutableLiveData<String> gameResult;
-    private AIHelper aiHelper; // ตัวช่วย AI
+    private final AIHelper aiHelper; // ตัวช่วย AI
 
-    public GameViewModel(@NonNull Application application) {
+    // dependency injection
+
+    public GameViewModel(@NonNull Application application){
         super(application);
-        board = new Board();
-        boardLiveData = new MutableLiveData<>(board.getBoard());
-        gameResult = new MutableLiveData<>("");
-        aiHelper = new AIHelper(application);
+        this.aiHelper = new AIHelper(application);
+        this.board = new Board();
+        this.boardLiveData=new MutableLiveData<>(board.getBoard());
+        this.gameResult=new MutableLiveData<String>("");
     }
+
 
     public LiveData<int[][]> getBoardLiveData() {
         return boardLiveData;
@@ -34,20 +38,12 @@ public class GameViewModel extends AndroidViewModel {
     }
 
     private void checkGameStatus() {
-        int winner = board.checkWinner();
-        if (winner == 1) {
-            gameResult.setValue("Player Wins!");
-        } else if (winner == 2) {
-            gameResult.setValue("AI Wins!");
-        } else if (winner == -1) {
-            gameResult.setValue("It's a Draw!");
-        }
+        String winner= GameUtils.getWinner(board.getBoard());
+        gameResult.setValue(winner);
     }
 
     public void resetGame() {
-        board.resetBoard();
-        boardLiveData.setValue(board.getBoard());
-        gameResult.setValue("");
+        GameUtils.resetGame(board,boardLiveData,gameResult);
     }
 
     // ผู้เล่นเดินหมาก
@@ -102,11 +98,6 @@ public class GameViewModel extends AndroidViewModel {
     }
 
     private boolean isBoardFull(int[][] board) {
-        for (int[] row : board) {
-            for (int cell : row) {
-                if (cell == 0) return false;
-            }
-        }
-        return true;
+       return GameUtils.isBoardFull(board);
     }
 }
